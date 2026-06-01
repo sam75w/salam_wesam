@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -46,3 +47,9 @@ Route::post('/tasks/{id}/update', function ($id) {
 
     return redirect('/tasks');
 });
+
+Route::get('/users', [UserController::class, 'index']);
+Route::post('/users', [UserController::class, 'store']);
+Route::get('/users/{id}/edit', [UserController::class, 'edit']);
+Route::post('/users/{id}/update', [UserController::class, 'update']);
+Route::post('/users/{id}/delete', [UserController::class, 'destroy']);
