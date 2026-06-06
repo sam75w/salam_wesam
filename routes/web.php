@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TaskController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -12,42 +12,14 @@ Route::get('/about', function () {
     return view('about');
 });
 
-Route::get('/tasks', function () {
-    $tasks = DB::table('tasks')->get();
+// Task routes using TaskController + Eloquent Model
+Route::get('/tasks', [TaskController::class, 'index']);
+Route::post('/tasks', [TaskController::class, 'store']);
+Route::get('/tasks/{id}/edit', [TaskController::class, 'edit']);
+Route::post('/tasks/{id}/update', [TaskController::class, 'update']);
+Route::post('/tasks/{id}/delete', [TaskController::class, 'destroy']);
 
-    return view('tasks', compact('tasks'));
-});
-
-Route::post('/tasks', function () {
-    DB::table('tasks')->insert([
-        'name' => request('name'),
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
-
-    return redirect('/tasks');
-});
-
-Route::post('/tasks/{id}/delete', function ($id) {
-    DB::table('tasks')->where('id', $id)->delete();
-
-    return redirect('/tasks');
-});
-Route::get('/tasks/{id}/edit', function ($id) {
-    $task = DB::table('tasks')->where('id', $id)->first();
-
-    return view('edit-task', compact('task'));
-});
-
-Route::post('/tasks/{id}/update', function ($id) {
-    DB::table('tasks')->where('id', $id)->update([
-        'name' => request('name'),
-        'updated_at' => now(),
-    ]);
-
-    return redirect('/tasks');
-});
-
+// User routes using UserController
 Route::get('/users', [UserController::class, 'index']);
 Route::post('/users', [UserController::class, 'store']);
 Route::get('/users/{id}/edit', [UserController::class, 'edit']);
